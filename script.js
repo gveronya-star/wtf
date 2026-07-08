@@ -1,62 +1,32 @@
 /*
   TELEGRAM USERNAME: Replace YOUR_USERNAME below with the correct Telegram username.
-  TEXT CONTENT: Button and popup messages can be edited in the strings below.
-  ANIMATIONS: Popup timing and evasive-button movement are controlled in this file and style.css.
+  TEXT CONTENT: Button messages can be edited in the strings below.
+  ANIMATIONS: Movement distance and timing for the evasive button are controlled in this file and style.css.
 */
 const telegramLink = 'https://t.me/cheshire_ironi';
 
 const eyes = document.querySelectorAll('.eye');
 const catFace = document.getElementById('catFace');
-const popupLayer = document.getElementById('popupLayer');
+const secretMessage = document.getElementById('secretMessage');
+const statusMessage = document.getElementById('statusMessage');
 const primaryButton = document.getElementById('primaryButton');
 const secondaryButton = document.getElementById('secondaryButton');
-const buttonStage = document.querySelector('.button-stage');
 
 let evasiveAttempts = 0;
-let lastEvasiveMove = 0;
 const evasiveWarnings = [
   'Are you sure?',
   'Linka is watching.',
   'This decision will be remembered.'
 ];
 
-function showPopup(message, anchor, options = {}) {
-  const popup = document.createElement('div');
-  popup.className = `floating-popup ${options.tone || ''}`.trim();
-  popup.innerHTML = message;
-  popupLayer.appendChild(popup);
-
-  const rect = anchor.getBoundingClientRect();
-  const popupRect = popup.getBoundingClientRect();
-  const gap = options.gap ?? 16;
-  const preferredTop = options.position === 'below'
-    ? rect.bottom + gap
-    : rect.top - popupRect.height - gap;
-  const fallbackTop = rect.bottom + gap;
-  const top = preferredTop < 12 ? fallbackTop : preferredTop;
-  const left = rect.left + rect.width / 2 - popupRect.width / 2;
-
-  popup.style.left = `${Math.min(Math.max(12, left), window.innerWidth - popupRect.width - 12)}px`;
-  popup.style.top = `${Math.min(Math.max(12, top), window.innerHeight - popupRect.height - 12)}px`;
-
-  window.setTimeout(() => popup.classList.add('is-visible'), 20);
-  window.setTimeout(() => {
-    popup.classList.remove('is-visible');
-    popup.classList.add('is-leaving');
-  }, options.duration || 2600);
-  window.setTimeout(() => popup.remove(), (options.duration || 2600) + 420);
-}
-
-function showSecret(anchor = catFace) {
-  showPopup('<strong>Secret information unlocked:</strong><br>Linka is actually the CEO of this operation.', anchor, {
-    position: 'below',
-    duration: 3200
-  });
+function showStatus(message) {
+  statusMessage.innerHTML = message;
+  statusMessage.classList.remove('active');
+  void statusMessage.offsetWidth;
+  statusMessage.classList.add('active');
 }
 
 function trackPupils(event) {
-  let shouldUnlockSecret = false;
-
   eyes.forEach((eye) => {
     const pupil = eye.querySelector('.pupil');
     const rect = eye.getBoundingClientRect();
@@ -65,51 +35,32 @@ function trackPupils(event) {
     const distanceX = event.clientX - eyeCenterX;
     const distanceY = event.clientY - eyeCenterY;
     const angle = Math.atan2(distanceY, distanceX);
-    const distance = Math.min(15, Math.hypot(distanceX, distanceY) / 16);
+    const distance = Math.min(16, Math.hypot(distanceX, distanceY) / 14);
 
     pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
 
-    if (Math.hypot(distanceX, distanceY) < 165) {
+    if (Math.hypot(distanceX, distanceY) < 180) {
       eye.classList.add('is-alert');
-      shouldUnlockSecret = true;
+      secretMessage.classList.add('visible');
     } else {
       eye.classList.remove('is-alert');
     }
   });
-
-  if (shouldUnlockSecret && !catFace.dataset.secretRecentlyShown) {
-    catFace.dataset.secretRecentlyShown = 'true';
-    showSecret(catFace);
-    window.setTimeout(() => delete catFace.dataset.secretRecentlyShown, 4200);
-  }
 }
 
-function moveEvasiveButton(anchorEvent) {
-  const now = Date.now();
-  if (now - lastEvasiveMove < 280) return;
-  lastEvasiveMove = now;
-
+function moveEvasiveButton() {
   evasiveAttempts += 1;
   const warning = evasiveWarnings[Math.min(evasiveAttempts - 1, evasiveWarnings.length - 1)];
-  showPopup(warning, secondaryButton, { duration: 1900 });
+  showStatus(warning);
 
-  const stageRect = buttonStage.getBoundingClientRect();
   const buttonRect = secondaryButton.getBoundingClientRect();
-  const padding = 8;
-  const maxLeft = Math.max(padding, stageRect.width - buttonRect.width - padding);
-  const maxTop = Math.max(padding, stageRect.height - buttonRect.height - padding);
-  let nextLeft = Math.random() * (maxLeft - padding) + padding;
-  let nextTop = Math.random() * (maxTop - padding) + padding;
+  const padding = 18;
+  const maxLeft = Math.max(padding, window.innerWidth - buttonRect.width - padding);
+  const maxTop = Math.max(padding, window.innerHeight - buttonRect.height - padding);
+  const nextLeft = Math.random() * (maxLeft - padding) + padding;
+  const nextTop = Math.random() * (maxTop - padding) + padding;
 
-  if (anchorEvent) {
-    const cursorX = anchorEvent.clientX - stageRect.left;
-    const cursorY = anchorEvent.clientY - stageRect.top;
-    if (Math.hypot(nextLeft - cursorX, nextTop - cursorY) < 130) {
-      nextLeft = cursorX < stageRect.width / 2 ? maxLeft : padding;
-      nextTop = cursorY < stageRect.height / 2 ? maxTop : padding;
-    }
-  }
-
+  secondaryButton.classList.add('floating');
   secondaryButton.style.left = `${nextLeft}px`;
   secondaryButton.style.top = `${nextTop}px`;
 }
@@ -120,34 +71,29 @@ function detectButtonApproach(event) {
   const closestY = Math.max(rect.top, Math.min(event.clientY, rect.bottom));
   const distance = Math.hypot(event.clientX - closestX, event.clientY - closestY);
 
-  if (distance < 92) {
-    moveEvasiveButton(event);
+  if (distance < 95) {
+    moveEvasiveButton();
   }
 }
 
 primaryButton.addEventListener('click', () => {
-  showPopup('Mission authorization approved.<br>Connecting to the Gift Officer...', primaryButton, {
-    position: 'above',
-    duration: 2100
-  });
+  showStatus('Mission authorization approved.<br>Connecting to the Gift Officer...');
   setTimeout(() => {
     window.open(telegramLink, '_blank', 'noopener,noreferrer');
   }, 950);
 });
 
 secondaryButton.addEventListener('click', () => {
-  showPopup('Mission aborted.<br><br>Linka has noticed your failure.<br><br>Consequences are currently being evaluated.', secondaryButton, {
-    tone: 'danger',
-    duration: 3600
-  });
+  showStatus('Mission aborted.<br><br>Linka has noticed your failure.<br><br>Consequences are currently being evaluated.');
 });
 
-catFace.addEventListener('mouseenter', () => showSecret(catFace));
-catFace.addEventListener('click', () => showSecret(catFace));
+catFace.addEventListener('mouseenter', () => secretMessage.classList.add('visible'));
+catFace.addEventListener('click', () => secretMessage.classList.add('visible'));
 document.addEventListener('mousemove', trackPupils);
 document.addEventListener('mousemove', detectButtonApproach);
 
 window.addEventListener('resize', () => {
+  secondaryButton.classList.remove('floating');
   secondaryButton.style.left = '';
   secondaryButton.style.top = '';
 });
