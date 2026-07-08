@@ -10,14 +10,14 @@ const catFace = document.getElementById('catFace');
 const popupLayer = document.getElementById('popupLayer');
 const primaryButton = document.getElementById('primaryButton');
 const secondaryButton = document.getElementById('secondaryButton');
+const buttonStage = document.querySelector('.button-stage');
 
 let evasiveAttempts = 0;
 let lastEvasiveMove = 0;
 const evasiveWarnings = [
   'Are you sure?',
-  'Linka is watching you.',
+  'Linka is watching.',
   'This decision will be remembered.'
-  'Do not do that.'
 ];
 
 function showPopup(message, anchor, options = {}) {
@@ -50,7 +50,7 @@ function showPopup(message, anchor, options = {}) {
 function showSecret(anchor = catFace) {
   showPopup('<strong>Secret information unlocked:</strong><br>Linka is actually the CEO of this operation.', anchor, {
     position: 'below',
-    duration: 2400
+    duration: 3200
   });
 }
 
@@ -93,19 +93,23 @@ function moveEvasiveButton(anchorEvent) {
   const warning = evasiveWarnings[Math.min(evasiveAttempts - 1, evasiveWarnings.length - 1)];
   showPopup(warning, secondaryButton, { duration: 1900 });
 
+  const stageRect = buttonStage.getBoundingClientRect();
   const buttonRect = secondaryButton.getBoundingClientRect();
-  const padding = 18;
-  const maxLeft = Math.max(padding, window.innerWidth - buttonRect.width - padding);
-  const maxTop = Math.max(padding, window.innerHeight - buttonRect.height - padding);
+  const padding = 8;
+  const maxLeft = Math.max(padding, stageRect.width - buttonRect.width - padding);
+  const maxTop = Math.max(padding, stageRect.height - buttonRect.height - padding);
   let nextLeft = Math.random() * (maxLeft - padding) + padding;
   let nextTop = Math.random() * (maxTop - padding) + padding;
 
-  if (anchorEvent && Math.hypot(nextLeft - anchorEvent.clientX, nextTop - anchorEvent.clientY) < 180) {
-    nextLeft = anchorEvent.clientX < window.innerWidth / 2 ? maxLeft : padding;
-    nextTop = anchorEvent.clientY < window.innerHeight / 2 ? maxTop : padding;
+  if (anchorEvent) {
+    const cursorX = anchorEvent.clientX - stageRect.left;
+    const cursorY = anchorEvent.clientY - stageRect.top;
+    if (Math.hypot(nextLeft - cursorX, nextTop - cursorY) < 130) {
+      nextLeft = cursorX < stageRect.width / 2 ? maxLeft : padding;
+      nextTop = cursorY < stageRect.height / 2 ? maxTop : padding;
+    }
   }
 
-  secondaryButton.classList.add('is-roaming');
   secondaryButton.style.left = `${nextLeft}px`;
   secondaryButton.style.top = `${nextTop}px`;
 }
@@ -144,7 +148,6 @@ document.addEventListener('mousemove', trackPupils);
 document.addEventListener('mousemove', detectButtonApproach);
 
 window.addEventListener('resize', () => {
-  secondaryButton.classList.remove('is-roaming');
   secondaryButton.style.left = '';
   secondaryButton.style.top = '';
 });
