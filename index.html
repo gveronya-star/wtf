@@ -32,9 +32,7 @@
             To complete the mission, we require assistance from the human employee.
           </p>
 
-          <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
-
-          <div class="button-row">
+          <div class="button-stage" aria-label="Mission actions">
             <button id="primaryButton" class="mission-button primary-button" type="button">
               Provide Delivery Coordinates 🐾
             </button>
@@ -47,9 +45,11 @@
         <div class="visual-panel" aria-label="Stylized black British Shorthair cat with amber eyes">
           <div class="cat-orbit"></div>
           <div id="catFace" class="cat-face">
-            <div class="cat-ear left-ear"></div>
-            <div class="cat-ear right-ear"></div>
+            <div class="cat-body"></div>
+            <div class="cat-ear left-ear"><span></span></div>
+            <div class="cat-ear right-ear"><span></span></div>
             <div class="cat-head">
+              <div class="royal-brow"></div>
               <div class="fur-shine"></div>
               <div id="leftEye" class="eye left-eye">
                 <span class="pupil"></span>
@@ -59,16 +59,16 @@
                 <span class="pupil"></span>
                 <span class="eye-spark"></span>
               </div>
+              <div class="cheek cheek-left"></div>
+              <div class="cheek cheek-right"></div>
               <div class="muzzle"></div>
               <div class="nose"></div>
+              <div class="mouth-line"></div>
               <div class="whiskers whiskers-left"></div>
               <div class="whiskers whiskers-right"></div>
             </div>
           </div>
-          <div id="secretMessage" class="secret-message" aria-live="polite">
-            <strong>Secret information unlocked:</strong><br />
-            Linka is actually the CEO of this operation.
-          </div>
+
         </div>
       </div>
     </section>
@@ -77,6 +77,8 @@
       Approved by the International Cat Birthday Committee 🐾
     </footer>
   </main>
+
+  <div id="popupLayer" class="popup-layer" aria-live="polite" aria-atomic="true"></div>
 
   <script src="script.js"></script>
 </body>
