@@ -80,7 +80,7 @@ primaryButton.addEventListener('click', () => {
   showStatus('Mission authorization approved.<br>Connecting to the Gift Officer...');
   setTimeout(() => {
     window.open(telegramLink, '_blank', 'noopener,noreferrer');
-  }, 950);
+  }, 1500);
 });
 
 secondaryButton.addEventListener('click', () => {
