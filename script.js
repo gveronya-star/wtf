@@ -55,7 +55,7 @@ function trackPupils(event) {
 
 function moveEvasiveButton() {
   evasiveAttempts += 1;
-  const warning = evasiveWarnings[Math.min(evasiveAttempts - 1, evasiveWarnings.length - 1)];
+  const warning = evasiveWarnings[(evasiveAttempts - 1) % evasiveWarnings.length];
   showStatus(warning);
 
   const buttonRect = secondaryButton.getBoundingClientRect();
