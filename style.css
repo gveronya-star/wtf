@@ -203,6 +203,11 @@ h1 {
   transition: left 280ms cubic-bezier(.2,.9,.2,1.3), top 280ms cubic-bezier(.2,.9,.2,1.3), transform 180ms ease;
 }
 
+.button-placeholder {
+  width: 240px;
+  height: 60px;
+}
+
 .visual-panel {
   position: relative;
   min-height: 500px;
