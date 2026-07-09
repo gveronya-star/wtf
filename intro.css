@@ -25,9 +25,13 @@ body {
   letter-spacing: 2px;
 }
 
-button {
+.button {
+  display: inline-block;
   margin-top: 30px;
   padding: 16px 30px;
   border-radius: 20px;
-  cursor: pointer;
+  background: #d69b2d;
+  color: #080a0d;
+  text-decoration: none;
+  font-weight: 800;
 }
