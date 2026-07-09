@@ -3,7 +3,7 @@
   TEXT CONTENT: Button messages can be edited in the strings below.
   ANIMATIONS: Movement distance and timing for the evasive button are controlled in this file and style.css.
 */
-const telegramLink = 'https://t.me/YOUR_USERNAME';
+const telegramLink = 'https://t.me/cheshire_ironi';
 
 const eyes = document.querySelectorAll('.eye');
 const catFace = document.getElementById('catFace');
