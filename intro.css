@@ -20,7 +20,7 @@ body {
 
 .intro-content {
   width: min(600px, 90%);
-  transform: translateY(-40px);
+  transform: translateY(-60px);
 }
 
 
@@ -76,6 +76,8 @@ body {
 
   color: #080a0d;
   text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   font-weight: 800;
 
   box-shadow:
