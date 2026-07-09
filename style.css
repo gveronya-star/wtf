@@ -192,6 +192,8 @@ h1 {
 
 .evasive-button {
   position: relative;
+  min-width: 240px;
+  white-space: nowrap;
   color: #e5dccb;
   background: rgba(8, 10, 13, 0.72);
   border: 1px solid rgba(214, 155, 45, 0.25);
