@@ -10,9 +10,6 @@ body {
 
 
 .intro-screen {
-  min-height: 100vh;
-  width: min(1120px, calc(100% - 32px));
-  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
