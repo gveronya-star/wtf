@@ -92,8 +92,17 @@ secondaryButton.addEventListener('click', () => {
   showStatus('Mission aborted.<br><br>Linka has noticed your failure.<br><br>Consequences are currently being evaluated.');
 });
 
-catFace.addEventListener('mouseenter', () => secretMessage.classList.add('visible'));
-catFace.addEventListener('click', () => secretMessage.classList.add('visible'));
+function showSecretMessage() {
+  secretMessage.classList.add('visible');
+
+  setTimeout(() => {
+    secretMessage.classList.remove('visible');
+  }, 2000);
+}
+
+catFace.addEventListener('mouseenter', showSecretMessage);
+catFace.addEventListener('click', showSecretMessage);
+
 document.addEventListener('mousemove', trackPupils);
 document.addEventListener('mousemove', detectButtonApproach);
 
