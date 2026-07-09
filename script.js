@@ -21,9 +21,14 @@ const evasiveWarnings = [
 
 function showStatus(message) {
   statusMessage.innerHTML = message;
+
   statusMessage.classList.remove('active');
   void statusMessage.offsetWidth;
   statusMessage.classList.add('active');
+
+  setTimeout(() => {
+    statusMessage.classList.remove('active');
+  }, 1500);
 }
 
 function trackPupils(event) {
