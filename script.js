@@ -59,11 +59,22 @@ function moveEvasiveButton() {
   showStatus(warning);
 
   const buttonRect = secondaryButton.getBoundingClientRect();
-  const padding = 18;
-  const maxLeft = Math.max(padding, window.innerWidth - buttonRect.width - padding);
-  const maxTop = Math.max(padding, window.innerHeight - buttonRect.height - padding);
-  const nextLeft = Math.random() * (maxLeft - padding) + padding;
-  const nextTop = Math.random() * (maxTop - padding) + padding;
+  const card = document.querySelector('.mission-card');
+  const cardRect = card.getBoundingClientRect();
+const padding = 24;
+
+const minLeft = cardRect.left + padding;
+const maxLeft = cardRect.right - buttonRect.width - padding;
+
+const minTop = cardRect.top + padding;
+const maxTop = cardRect.bottom - buttonRect.height - padding;
+
+const nextLeft =
+  Math.random() * (maxLeft - minLeft) + minLeft;
+
+const nextTop =
+  Math.random() * (maxTop - minTop) + minTop;
+  
 
   secondaryButton.classList.add('floating');
   secondaryButton.style.left = `${nextLeft}px`;
